@@ -1,4 +1,4 @@
-package com.indev.job.scheduling;
+package com.indev.job.scheduling.scheduler;
 
 public class Event
 {

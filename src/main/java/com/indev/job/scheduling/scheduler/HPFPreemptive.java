@@ -1,43 +1,30 @@
-package com.indev.job.scheduling;
+package com.indev.job.scheduling.scheduler;
+
+import com.indev.job.scheduling.Utility;
 
 import java.util.*;
 
-public class PriorityPreemptive extends JobScheduler
+public class HPFPreemptive extends JobScheduler
 {
     @Override
-    public void process()
+    public void doProcess()
     {
-        Collections.sort(this.getJobs(), (Object o1, Object o2) -> {
-            if (((Job) o1).getArrivalTime() == ((Job) o2).getArrivalTime())
-            {
-                return 0;
-            }
-            else if (((Job) o1).getArrivalTime() < ((Job) o2).getArrivalTime())
-            {
-                return -1;
-            }
-            else
-            {
-                return 1;
-            }
-        });
+        List<Job> jobs = Utility.deepCopy(this.getJobs());
+        int time = jobs.get(0).getArrivalTime();
         
-        List<Job> rows = Utility.deepCopy(this.getJobs());
-        int time = rows.get(0).getArrivalTime();
-        
-        while (!rows.isEmpty())
+        while (!jobs.isEmpty())
         {
-            List<Job> availableRows = new ArrayList();
+            List<Job> availableJobs = new ArrayList();
             
-            for (Job row : rows)
+            for (Job job : jobs)
             {
-                if (row.getArrivalTime() <= time)
+                if (job.getArrivalTime() <= time)
                 {
-                    availableRows.add(row);
+                    availableJobs.add(job);
                 }
             }
             
-            Collections.sort(availableRows, (Object o1, Object o2) -> {
+            Collections.sort(availableJobs, (Object o1, Object o2) -> {
                 if (((Job) o1).getPriorityLevel()== ((Job) o2).getPriorityLevel())
                 {
                     return 0;
@@ -52,17 +39,17 @@ public class PriorityPreemptive extends JobScheduler
                 }
             });
             
-            Job row = availableRows.get(0);
-            this.getTimeline().add(new Event(row.getProcessName(), time, ++time));
-            row.setBurstTime(row.getBurstTime() - 1);
+            Job job = availableJobs.get(0);
+            this.getTimeline().add(new Event(job.getProcessName(), time, ++time));
+            job.setServiceTime(job.getServiceTime() - 1);
             
-            if (row.getBurstTime() == 0)
+            if (job.getServiceTime() == 0)
             {
-                for (int i = 0; i < rows.size(); i++)
+                for (int i = 0; i < jobs.size(); i++)
                 {
-                    if (rows.get(i).getProcessName().equals(row.getProcessName()))
+                    if (jobs.get(i).getProcessName().equals(job.getProcessName()))
                     {
-                        rows.remove(i);
+                        jobs.remove(i);
                         break;
                     }
                 }
@@ -82,29 +69,29 @@ public class PriorityPreemptive extends JobScheduler
         
         Map map = new HashMap();
         
-        for (Job row : this.getJobs())
+        for (Job job : this.getJobs())
         {
             map.clear();
             
             for (Event event : this.getTimeline())
             {
-                if (event.getProcessName().equals(row.getProcessName()))
+                if (event.getProcessName().equals(job.getProcessName()))
                 {
                     if (map.containsKey(event.getProcessName()))
                     {
                         int w = event.getStartTime() - (int) map.get(event.getProcessName());
-                        row.setWaitingTime(row.getWaitingTime() + w);
+                        job.setWaitingTime(job.getWaitingTime() + w);
                     }
                     else
                     {
-                        row.setWaitingTime(event.getStartTime() - row.getArrivalTime());
+                        job.setWaitingTime(event.getStartTime() - job.getArrivalTime());
                     }
                     
                     map.put(event.getProcessName(), event.getFinishTime());
                 }
             }
             
-            row.setTurnaroundTime(row.getWaitingTime() + row.getBurstTime());
+            job.setTurnaroundTime(job.getWaitingTime() + job.getServiceTime());
         }
     }
 }
