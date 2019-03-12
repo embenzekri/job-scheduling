@@ -42,32 +42,8 @@ public class RoundRobin extends JobScheduler
                 }
             }
         }
-        
-        Map map = new HashMap();
-        
-        for (Job job : this.getJobs())
-        {
-            map.clear();
-            
-            for (Event event : this.getTimeline())
-            {
-                if (event.getProcessName().equals(job.getProcessName()))
-                {
-                    if (map.containsKey(event.getProcessName()))
-                    {
-                        int w = event.getStartTime() - (int) map.get(event.getProcessName());
-                        job.setWaitingTime(job.getWaitingTime() + w);
-                    }
-                    else
-                    {
-                        job.setWaitingTime(event.getStartTime() - job.getArrivalTime());
-                    }
-                    
-                    map.put(event.getProcessName(), event.getFinishTime());
-                }
-            }
-            
-            job.setTurnaroundTime(job.getWaitingTime() + job.getServiceTime());
-        }
+
+        adjustWTAndTAT();
     }
+
 }

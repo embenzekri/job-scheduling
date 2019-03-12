@@ -1,18 +1,18 @@
 package com.indev.job.scheduling.scheduler;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public abstract class JobScheduler {
     private List<Job> jobs;
     private List<Event> timeline;
     private int timeQuantum;
+    protected JobSort jobSort;
 
     public JobScheduler() {
         jobs = new ArrayList();
         timeline = new ArrayList();
         timeQuantum = 1;
+        jobSort = new JobSort();
     }
 
     public boolean add(Job job) {
@@ -95,4 +95,27 @@ public abstract class JobScheduler {
     }
 
     public abstract void doProcess();
+
+
+    protected void adjustWTAndTAT() {
+        Map map = new HashMap();
+        for (Job job : this.getJobs()) {
+            map.clear();
+
+            for (Event event : this.getTimeline()) {
+                if (event.getProcessName().equals(job.getProcessName())) {
+                    if (map.containsKey(event.getProcessName())) {
+                        int w = event.getStartTime() - (int) map.get(event.getProcessName());
+                        job.setWaitingTime(job.getWaitingTime() + w);
+                    } else {
+                        job.setWaitingTime(event.getStartTime() - job.getArrivalTime());
+                    }
+
+                    map.put(event.getProcessName(), event.getFinishTime());
+                }
+            }
+
+            job.setTurnaroundTime(job.getWaitingTime() + job.getServiceTime());
+        }
+    }
 }

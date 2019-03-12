@@ -23,22 +23,9 @@ public class ShortestRemainingTime extends JobScheduler
                     availableJobs.add(job);
                 }
             }
-            
-            Collections.sort(availableJobs, (Object o1, Object o2) -> {
-                if (((Job) o1).getServiceTime() == ((Job) o2).getServiceTime())
-                {
-                    return 0;
-                }
-                else if (((Job) o1).getServiceTime() < ((Job) o2).getServiceTime())
-                {
-                    return -1;
-                }
-                else
-                {
-                    return 1;
-                }
-            });
-            
+
+            jobSort.sortByServiceTime(availableJobs);
+
             Job job = availableJobs.get(0);
             this.getTimeline().add(new Event(job.getProcessName(), time, ++time));
             job.setServiceTime(job.getServiceTime() - 1);
@@ -67,31 +54,7 @@ public class ShortestRemainingTime extends JobScheduler
             }
         }
         
-        Map map = new HashMap();
-        
-        for (Job job : this.getJobs())
-        {
-            map.clear();
-            
-            for (Event event : this.getTimeline())
-            {
-                if (event.getProcessName().equals(job.getProcessName()))
-                {
-                    if (map.containsKey(event.getProcessName()))
-                    {
-                        int w = event.getStartTime() - (int) map.get(event.getProcessName());
-                        job.setWaitingTime(job.getWaitingTime() + w);
-                    }
-                    else
-                    {
-                        job.setWaitingTime(event.getStartTime() - job.getArrivalTime());
-                    }
-                    
-                    map.put(event.getProcessName(), event.getFinishTime());
-                }
-            }
-            
-            job.setTurnaroundTime(job.getWaitingTime() + job.getServiceTime());
-        }
+        adjustWTAndTAT();
     }
+
 }
