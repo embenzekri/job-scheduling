@@ -12,7 +12,8 @@ import static com.indev.job.scheduling.Utility.DECIMAL_FORMATER;
 
 public class SchedulerResultPrinter {
     public void printSchedulerResult(JobScheduler scheduler) {
-        System.out.println("Process\tAT\tBT\tWT\tTAT");
+        System.out.println();
+        System.out.println("Process\tAT\tST\tWT\tTAT");
 
         for (Job job : scheduler.getJobs()) {
             System.out.println(job.getProcessName() + "\t\t" + job.getArrivalTime() + "\t" + job.getServiceTime() + "\t" + job.getWaitingTime() + "\t" + job.getTurnaroundTime());
@@ -39,9 +40,10 @@ public class SchedulerResultPrinter {
         double minTAT = Double.MAX_VALUE;
         String minWTAlgorithm = "";
         String minTATAlgorithm = "";
+
         for (String algorithm : simulationResults.keySet()) {
             RunResult runResult = simulationResults.get(algorithm);
-            System.out.println(algorithm + "\t\t" + runResult.getAverageWaitingTime() + "\t" + runResult.getAverageTurnAroundTime());
+            System.out.println(algorithm + "\t\t" + DECIMAL_FORMATER.format(runResult.getAverageWaitingTime()) + "\t" + DECIMAL_FORMATER.format(runResult.getAverageTurnAroundTime()));
             if (runResult.getAverageWaitingTime() < minWT) {
                 minWT = runResult.getAverageWaitingTime();
                 minWTAlgorithm = algorithm;
@@ -53,7 +55,6 @@ public class SchedulerResultPrinter {
         }
 
         System.out.println();
-
 
         System.out.println("\n\nMin Average WT: " + minWTAlgorithm + "(" + DECIMAL_FORMATER.format(minWT) + ")" + "\nMin Average TAT: " + minTATAlgorithm + "(" + DECIMAL_FORMATER.format(minTAT) + ") ");
     }
