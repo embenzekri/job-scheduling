@@ -8,7 +8,8 @@ public class Job
     private int priorityLevel;
     private int waitingTime;
     private int turnaroundTime;
-    
+    private int responseTime;
+
     private Job(String processName, int arrivalTime, int serviceTime, int priorityLevel, int waitingTime, int turnaroundTime)
     {
         this.processName = processName;
@@ -43,7 +44,7 @@ public class Job
     {
         this.turnaroundTime = turnaroundTime;
     }
-    
+
     public String getProcessName()
     {
         return this.processName;
@@ -72,5 +73,13 @@ public class Job
     public int getTurnaroundTime()
     {
         return this.turnaroundTime;
+    }
+
+    public int getResponseTime() {
+        return responseTime;
+    }
+
+    public void setResponseTime(int responseTime) {
+        this.responseTime = responseTime;
     }
 }

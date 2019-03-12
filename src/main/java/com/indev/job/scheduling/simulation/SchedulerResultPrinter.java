@@ -13,10 +13,10 @@ import static com.indev.job.scheduling.Utility.DECIMAL_FORMATER;
 public class SchedulerResultPrinter {
     public void printSchedulerResult(JobScheduler scheduler) {
         System.out.println();
-        System.out.println("Process\tAT\tST\tWT\tTAT");
+        System.out.println("Process\tAT\tST\tWT\rRT\tTAT");
 
         for (Job job : scheduler.getJobs()) {
-            System.out.println(job.getProcessName() + "\t\t" + job.getArrivalTime() + "\t" + job.getServiceTime() + "\t" + job.getWaitingTime() + "\t" + job.getTurnaroundTime());
+            System.out.println(job.getProcessName() + "\t\t" + job.getArrivalTime() + "\t" + job.getServiceTime() + "\t" + job.getWaitingTime()+ "\t" + job.getResponseTime() + "\t" + job.getTurnaroundTime());
         }
 
         System.out.println();
@@ -30,7 +30,9 @@ public class SchedulerResultPrinter {
             }
         }
 
-        System.out.println("\n\nAverage WT: " + scheduler.getAverageWaitingTime() + "\nAverage TAT: " + scheduler.getAverageTurnAroundTime());
+        System.out.println("\n\nAverage WT: " + scheduler.getAverageWaitingTime());
+        System.out.println("Average RT: " + scheduler.getAverageResponseTime());
+        System.out.println("Average TAT: " + scheduler.getAverageTurnAroundTime());
     }
 
     public void printSimulationResult(Map<String, RunResult> simulationResults) {

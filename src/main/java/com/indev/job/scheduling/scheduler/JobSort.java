@@ -28,4 +28,16 @@ public class JobSort {
             }
         });
     }
+
+    public void sortByArrivalTime(List<Job> availableJobs) {
+        Collections.sort(availableJobs, (Object o1, Object o2) -> {
+            if (((Job) o1).getArrivalTime() == ((Job) o2).getArrivalTime()) {
+                return 0;
+            } else if (((Job) o1).getArrivalTime() < ((Job) o2).getArrivalTime()) {
+                return -1;
+            } else {
+                return 1;
+            }
+        });
+    }
 }

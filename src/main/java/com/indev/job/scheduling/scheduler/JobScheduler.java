@@ -1,6 +1,9 @@
 package com.indev.job.scheduling.scheduler;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public abstract class JobScheduler {
     private List<Job> jobs;
@@ -62,14 +65,14 @@ public abstract class JobScheduler {
         return null;
     }
 
-    public Job getRow(String process) {
+    public double getAverageResponseTime() {
+        double avg = 0.0;
+
         for (Job job : jobs) {
-            if (job.getProcessName().equals(process)) {
-                return job;
-            }
+            avg += job.getResponseTime();
         }
 
-        return null;
+        return avg / jobs.size();
     }
 
     public List<Job> getJobs() {
@@ -81,15 +84,7 @@ public abstract class JobScheduler {
     }
 
     public void process() {
-        Collections.sort(this.getJobs(), (Object o1, Object o2) -> {
-            if (((Job) o1).getArrivalTime() == ((Job) o2).getArrivalTime()) {
-                return 0;
-            } else if (((Job) o1).getArrivalTime() < ((Job) o2).getArrivalTime()) {
-                return -1;
-            } else {
-                return 1;
-            }
-        });
+        jobSort.sortByArrivalTime(this.getJobs());
 
         doProcess();
     }
@@ -118,4 +113,5 @@ public abstract class JobScheduler {
             job.setTurnaroundTime(job.getWaitingTime() + job.getServiceTime());
         }
     }
+
 }
