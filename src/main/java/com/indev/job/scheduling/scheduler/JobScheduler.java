@@ -1,20 +1,20 @@
 package com.indev.job.scheduling.scheduler;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public abstract class JobScheduler {
     private List<Job> jobs;
     private List<Event> timeline;
     private int timeQuantum;
+    private int maxTimeQuantum;
+    private int idleTime;
     protected JobSort jobSort;
 
     public JobScheduler() {
         jobs = new ArrayList();
         timeline = new ArrayList();
         timeQuantum = 1;
+        maxTimeQuantum = 10;
         jobSort = new JobSort();
     }
 
@@ -29,6 +29,14 @@ public abstract class JobScheduler {
 
     public void setTimeQuantum(int timeQuantum) {
         this.timeQuantum = timeQuantum;
+    }
+
+    public int getMaxTimeQuantum() {
+        return maxTimeQuantum;
+    }
+
+    public void setMaxTimeQuantum(int maxTimeQuantum) {
+        this.maxTimeQuantum = maxTimeQuantum;
     }
 
     public int getTimeQuantum() {
@@ -109,9 +117,36 @@ public abstract class JobScheduler {
                     map.put(event.getProcessName(), event.getFinishTime());
                 }
             }
-
+            if (job.getWaitingTime() < 0) {
+                job.setWaitingTime(0);
+            }
             job.setTurnaroundTime(job.getWaitingTime() + job.getServiceTime());
         }
     }
 
+
+    protected Optional<Job> getJob(String processName) {
+        for (Job job : this.getJobs()) {
+            if (processName.equals(job.getProcessName())) {
+                return Optional.of(job);
+            }
+        }
+        return Optional.empty();
+    }
+
+
+    protected void updateResponseTime(int responseTime, String jobName) {
+        Optional<Job> job = getJob(jobName);
+        if (job.isPresent() && job.get().getResponseTime() == 0) {
+            job.get().setResponseTime(responseTime);
+        }
+    }
+
+    protected void increaseIdleTime(int idleTime) {
+        this.idleTime += idleTime;
+    }
+
+    public int getIdleTime() {
+        return idleTime;
+    }
 }

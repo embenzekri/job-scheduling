@@ -35,9 +35,9 @@ public class Simulation {
         double globalAverageResponseTime = averageResponseTimeSum / 5;
 
         System.out.println("\nStatistics of 5 runs");
-        System.out.println("Average WT for 5 runs : " + DECIMAL_FORMATER.format(globalAverageWaitingTime));
-        System.out.println("Average TAT for 5 runs: " + DECIMAL_FORMATER.format(globalAverageTurnAroundTime));
-        System.out.println("Average RT for 5 runs: " + DECIMAL_FORMATER.format(globalAverageResponseTime));
+        System.out.println("Average WT for " + runCount + " runs : " + DECIMAL_FORMATER.format(globalAverageWaitingTime));
+        System.out.println("Average TAT for " + runCount + " runs: " + DECIMAL_FORMATER.format(globalAverageTurnAroundTime));
+        System.out.println("Average RT for " + runCount + " runs: " + DECIMAL_FORMATER.format(globalAverageResponseTime));
         System.out.println("End of simulation for " + schedulerAlgorithm.toString());
         return new RunResult(globalAverageWaitingTime, globalAverageTurnAroundTime, globalAverageResponseTime);
     }
@@ -56,9 +56,14 @@ public class Simulation {
 
     private Job generateJob(String processId) {
         int arrivalTime = new Random().nextInt(5) + 1;
-        int serviceTime = new Random().nextInt(3) + 1;
-
+        int serviceTime = new Random().nextInt(10) + 1;
         int priority = new Random().nextInt(5) + 1;
+
+        return createJob(processId, arrivalTime, serviceTime, priority);
+    }
+
+    private Job createJob(String processId, int arrivalTime, int serviceTime, int priority) {
+
         return new Job(processId, arrivalTime, serviceTime, priority);
     }
 }

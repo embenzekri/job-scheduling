@@ -21,13 +21,13 @@ public class App {
         RunResult hpfPreemptiveResult = new Simulation(new HPFPreemptive()).simulate(simulationCount);
 
         Map<String, RunResult> simulationResults = new HashMap<>();
+        simulationResults.put("ShortestRemainingTime", shortedRemTimeResult);
         simulationResults.put("FirstComeFirstServed", fcfsResult);
         simulationResults.put("ShortestJobFirst", shortedJobFirstResult);
-        simulationResults.put("ShortestRemainingTime", shortedRemTimeResult);
         simulationResults.put("RoundRobin", roundRobinResult);
         simulationResults.put("HPFNonPreemptive", hpfNonPreemptiveResult);
         simulationResults.put("HPFPreemptive", hpfPreemptiveResult);
 
-        new SchedulerResultPrinter().printSimulationResult(simulationResults);
+        new SchedulerResultPrinter().printSimulationResult(simulationResults, simulationCount);
     }
 }

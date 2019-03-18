@@ -1,7 +1,6 @@
 package com.indev.job.scheduling.scheduler;
 
-public class Job
-{
+public class Job {
     private String processName;
     private int arrivalTime;
     private int serviceTime;
@@ -10,8 +9,7 @@ public class Job
     private int turnaroundTime;
     private int responseTime;
 
-    private Job(String processName, int arrivalTime, int serviceTime, int priorityLevel, int waitingTime, int turnaroundTime)
-    {
+    private Job(String processName, int arrivalTime, int serviceTime, int priorityLevel, int waitingTime, int turnaroundTime) {
         this.processName = processName;
         this.arrivalTime = arrivalTime;
         this.serviceTime = serviceTime;
@@ -19,59 +17,50 @@ public class Job
         this.waitingTime = waitingTime;
         this.turnaroundTime = turnaroundTime;
     }
-    
-    public Job(String processName, int arrivalTime, int serviceTime, int priorityLevel)
-    {
+
+    public Job(String processName, int arrivalTime, int serviceTime, int priorityLevel) {
         this(processName, arrivalTime, serviceTime, priorityLevel, 0, 0);
     }
-    
-    public Job(String processName, int arrivalTime, int serviceTime)
-    {
+
+    public Job(String processName, int arrivalTime, int serviceTime) {
         this(processName, arrivalTime, serviceTime, 0, 0, 0);
     }
-    
-    public void setServiceTime(int serviceTime)
-    {
+
+    public void setServiceTime(int serviceTime) {
         this.serviceTime = serviceTime;
     }
-    
-    public void setWaitingTime(int waitingTime)
-    {
+
+    public void setWaitingTime(int waitingTime) {
         this.waitingTime = waitingTime;
     }
-    
-    public void setTurnaroundTime(int turnaroundTime)
-    {
+
+    public void setTurnaroundTime(int turnaroundTime) {
         this.turnaroundTime = turnaroundTime;
     }
 
-    public String getProcessName()
-    {
+    public String getProcessName() {
         return this.processName;
     }
-    
-    public int getArrivalTime()
-    {
+
+    public int getArrivalTime() {
         return this.arrivalTime;
     }
-    
-    public int getServiceTime()
-    {
+
+    public int getServiceTime() {
         return this.serviceTime;
     }
-    
-    public int getPriorityLevel()
-    {
+
+    public int getPriorityLevel() {
         return this.priorityLevel;
     }
-    
-    public int getWaitingTime()
-    {
+
+    public int getWaitingTime() {
+        if (this.waitingTime < 0)
+            return 0;
         return this.waitingTime;
     }
-    
-    public int getTurnaroundTime()
-    {
+
+    public int getTurnaroundTime() {
         return this.turnaroundTime;
     }
 

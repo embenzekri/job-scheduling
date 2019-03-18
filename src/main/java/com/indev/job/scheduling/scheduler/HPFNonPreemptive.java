@@ -19,11 +19,16 @@ public class HPFNonPreemptive extends JobScheduler {
                     availableJobs.add(job);
                 }
             }
-
+            if(availableJobs.isEmpty()){
+                time++;
+                continue;
+            }
             jobSort.sortByPriority(availableJobs);
 
             Job job = availableJobs.get(0);
-            this.getTimeline().add(new Event(job.getProcessName(), time, time + job.getServiceTime()));
+            int serviceTime = time + job.getServiceTime();
+            updateResponseTime(serviceTime - job.getArrivalTime(), job.getProcessName());
+            this.getTimeline().add(new Event(job.getProcessName(), time, serviceTime));
             time += job.getServiceTime();
 
             for (int i = 0; i < jobs.size(); i++) {

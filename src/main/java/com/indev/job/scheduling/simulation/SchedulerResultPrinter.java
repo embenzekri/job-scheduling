@@ -1,8 +1,6 @@
 package com.indev.job.scheduling.simulation;
 
-import com.indev.job.scheduling.scheduler.Event;
-import com.indev.job.scheduling.scheduler.Job;
-import com.indev.job.scheduling.scheduler.JobScheduler;
+import com.indev.job.scheduling.scheduler.*;
 
 import java.util.List;
 import java.util.Map;
@@ -13,10 +11,10 @@ import static com.indev.job.scheduling.Utility.DECIMAL_FORMATER;
 public class SchedulerResultPrinter {
     public void printSchedulerResult(JobScheduler scheduler) {
         System.out.println();
-        System.out.println("Process\tAT\tST\tWT\rRT\tTAT");
-
-        for (Job job : scheduler.getJobs()) {
-            System.out.println(job.getProcessName() + "\t\t" + job.getArrivalTime() + "\t" + job.getServiceTime() + "\t" + job.getWaitingTime()+ "\t" + job.getResponseTime() + "\t" + job.getTurnaroundTime());
+        if (scheduler instanceof HPFNonPreemptive || scheduler instanceof HPFPreemptive) {
+            printWithPriority(scheduler, true);
+        } else {
+            printWithPriority(scheduler, false);
         }
 
         System.out.println();
@@ -30,18 +28,36 @@ public class SchedulerResultPrinter {
             }
         }
 
-        System.out.println("\n\nAverage WT: " + scheduler.getAverageWaitingTime());
-        System.out.println("Average RT: " + scheduler.getAverageResponseTime());
-        System.out.println("Average TAT: " + scheduler.getAverageTurnAroundTime());
+        System.out.println("\n\nAverage WT: " + DECIMAL_FORMATER.format(scheduler.getAverageWaitingTime()));
+        System.out.println("Average RT: " + DECIMAL_FORMATER.format(scheduler.getAverageResponseTime()));
+        System.out.println("Average TAT: " + DECIMAL_FORMATER.format(scheduler.getAverageTurnAroundTime()));
     }
 
-    public void printSimulationResult(Map<String, RunResult> simulationResults) {
+    private void printWithPriority(JobScheduler scheduler, boolean printPriority) {
+        System.out.print("Process\tAT\tST");
+        if (printPriority) {
+            System.out.print("\tPRT");
+        }
+        System.out.print("\tWT\tRT\tTAT\n");
+
+        for (Job job : scheduler.getJobs()) {
+            System.out.print(job.getProcessName() + "\t\t" + job.getArrivalTime() + "\t" + job.getServiceTime());
+            if (printPriority) {
+                System.out.print("\t" + job.getPriorityLevel());
+            }
+            System.out.print("\t" + job.getWaitingTime() + "\t" + job.getResponseTime() + "\t" + job.getTurnaroundTime() + "\n");
+        }
+    }
+
+    public void printSimulationResult(Map<String, RunResult> simulationResults, int simulationCount) {
         System.out.println("Algorithm\tWT\tTAT");
 
         double minWT = Double.MAX_VALUE;
         double minTAT = Double.MAX_VALUE;
+        double minRT = Double.MAX_VALUE;
         String minWTAlgorithm = "";
         String minTATAlgorithm = "";
+        String minRTAlgorithm = "";
 
         for (String algorithm : simulationResults.keySet()) {
             RunResult runResult = simulationResults.get(algorithm);
@@ -54,11 +70,17 @@ public class SchedulerResultPrinter {
                 minTAT = runResult.getAverageTurnAroundTime();
                 minTATAlgorithm = algorithm;
             }
+            if (runResult.getAverageResponseTime() < minRT) {
+                minRT = runResult.getAverageResponseTime();
+                minRTAlgorithm = algorithm;
+            }
         }
 
         System.out.println();
 
-        System.out.println("\n\nMin Average WT: " + minWTAlgorithm + "(" + DECIMAL_FORMATER.format(minWT) + ")" + "\nMin Average TAT: " + minTATAlgorithm + "(" + DECIMAL_FORMATER.format(minTAT) + ") ");
+        System.out.println("\n\nMin Average WT for " + simulationCount + " simulations : " + minWTAlgorithm + "(" + DECIMAL_FORMATER.format(minWT) + ")");
+        System.out.println("Min Average RT for " + simulationCount + " simulations :" + minRTAlgorithm + "(" + DECIMAL_FORMATER.format(minRT) + ") ");
+        System.out.println("Min Average TAT for " + simulationCount + " simulations :" + minTATAlgorithm + "(" + DECIMAL_FORMATER.format(minTAT) + ") ");
     }
 
 }

@@ -21,7 +21,10 @@ public class ShortestJobFirst extends JobScheduler {
             }
 
             jobSort.sortByServiceTime(availableJobs);
-
+            if(availableJobs.isEmpty()){
+                time++;
+                continue;
+            }
             Job job = availableJobs.get(0);
             this.getTimeline().add(new Event(job.getProcessName(), time, time + job.getServiceTime()));
             time += job.getServiceTime();
