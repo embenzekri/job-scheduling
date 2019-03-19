@@ -50,7 +50,7 @@ public class SchedulerResultPrinter {
     }
 
     public void printSimulationResult(Map<String, RunResult> simulationResults, int simulationCount) {
-        System.out.println("Algorithm\tWT\tTAT");
+        System.out.println(String.format("\n%-30s%-10s%-10s\n","Algorithm","WT","TAT"));
 
         double minWT = Double.MAX_VALUE;
         double minTAT = Double.MAX_VALUE;
@@ -61,7 +61,11 @@ public class SchedulerResultPrinter {
 
         for (String algorithm : simulationResults.keySet()) {
             RunResult runResult = simulationResults.get(algorithm);
-            System.out.println(algorithm + "\t\t" + DECIMAL_FORMATER.format(runResult.getAverageWaitingTime()) + "\t" + DECIMAL_FORMATER.format(runResult.getAverageTurnAroundTime()));
+
+            System.out.print(String.format("%-30s", algorithm));
+            System.out.print(String.format("%-10s", DECIMAL_FORMATER.format(runResult.getAverageWaitingTime())));
+            System.out.print(String.format("%-10s", DECIMAL_FORMATER.format(runResult.getAverageTurnAroundTime())));
+            System.out.println();
             if (runResult.getAverageWaitingTime() < minWT) {
                 minWT = runResult.getAverageWaitingTime();
                 minWTAlgorithm = algorithm;
@@ -78,9 +82,9 @@ public class SchedulerResultPrinter {
 
         System.out.println();
 
-        System.out.println("\n\nMin Average WT for " + simulationCount + " simulations : " + minWTAlgorithm + "(" + DECIMAL_FORMATER.format(minWT) + ")");
-        System.out.println("Min Average RT for " + simulationCount + " simulations :" + minRTAlgorithm + "(" + DECIMAL_FORMATER.format(minRT) + ") ");
-        System.out.println("Min Average TAT for " + simulationCount + " simulations :" + minTATAlgorithm + "(" + DECIMAL_FORMATER.format(minTAT) + ") ");
+        System.out.println("\n\nMin Average WT for " + simulationCount + " simulations :\t" + minWTAlgorithm + "(" + DECIMAL_FORMATER.format(minWT) + ")");
+        System.out.println("Min Average RT for " + simulationCount + " simulations :\t" + minRTAlgorithm + "(" + DECIMAL_FORMATER.format(minRT) + ") ");
+        System.out.println("Min Average TAT for " + simulationCount + " simulations :\t" + minTATAlgorithm + "(" + DECIMAL_FORMATER.format(minTAT) + ") ");
     }
 
 }
