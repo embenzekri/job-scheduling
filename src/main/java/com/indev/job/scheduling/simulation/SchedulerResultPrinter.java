@@ -50,7 +50,7 @@ public class SchedulerResultPrinter {
     }
 
     public void printSimulationResult(Map<String, RunResult> simulationResults, int simulationCount) {
-        System.out.println(String.format("\n%-30s%-10s%-10s\n","Algorithm","WT","TAT"));
+        System.out.println(String.format("\n%-30s%-10s%-10s%-10s\n","Algorithm","WT","RT","TAT"));
 
         double minWT = Double.MAX_VALUE;
         double minTAT = Double.MAX_VALUE;
@@ -64,6 +64,7 @@ public class SchedulerResultPrinter {
 
             System.out.print(String.format("%-30s", algorithm));
             System.out.print(String.format("%-10s", DECIMAL_FORMATER.format(runResult.getAverageWaitingTime())));
+            System.out.print(String.format("%-10s", DECIMAL_FORMATER.format(runResult.getAverageResponseTime())));
             System.out.print(String.format("%-10s", DECIMAL_FORMATER.format(runResult.getAverageTurnAroundTime())));
             System.out.println();
             if (runResult.getAverageWaitingTime() < minWT) {

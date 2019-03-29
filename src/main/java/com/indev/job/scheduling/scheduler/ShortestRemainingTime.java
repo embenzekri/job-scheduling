@@ -29,7 +29,7 @@ public class ShortestRemainingTime extends JobScheduler {
             jobSort.sortByServiceTime(availableJobs);
 
             Job job = availableJobs.get(0);
-            updateResponseTime((time - job.getArrivalTime()) + 1, job.getProcessName());
+            updateResponseTime(time, job.getProcessName());
             this.getTimeline().add(new Event(job.getProcessName(), time, ++time));
             job.setServiceTime(job.getServiceTime() - 1);
             if (job.getServiceTime() == 0) {

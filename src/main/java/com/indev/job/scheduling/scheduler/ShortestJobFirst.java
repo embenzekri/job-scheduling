@@ -26,6 +26,7 @@ public class ShortestJobFirst extends JobScheduler {
                 continue;
             }
             Job job = availableJobs.get(0);
+            updateResponseTime(time,job.getProcessName());
             this.getTimeline().add(new Event(job.getProcessName(), time, time + job.getServiceTime()));
             time += job.getServiceTime();
 
@@ -40,7 +41,6 @@ public class ShortestJobFirst extends JobScheduler {
         for (Job job : this.getJobs()) {
             job.setWaitingTime(this.getEvent(job).getStartTime() - job.getArrivalTime());
             job.setTurnaroundTime(job.getWaitingTime() + job.getServiceTime());
-            job.setResponseTime(this.getEvent(job).getFinishTime() - job.getArrivalTime());
         }
     }
 }

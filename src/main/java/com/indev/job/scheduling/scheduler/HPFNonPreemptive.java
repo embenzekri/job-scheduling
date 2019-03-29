@@ -27,7 +27,7 @@ public class HPFNonPreemptive extends JobScheduler {
 
             Job job = availableJobs.get(0);
             int serviceTime = time + job.getServiceTime();
-            updateResponseTime(serviceTime - job.getArrivalTime(), job.getProcessName());
+            updateResponseTime(serviceTime, job.getProcessName());
             this.getTimeline().add(new Event(job.getProcessName(), time, serviceTime));
             time += job.getServiceTime();
 
