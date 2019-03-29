@@ -15,7 +15,7 @@ public class RoundRobin extends JobScheduler {
             Job job = jobs.get(0);
             int bt = (job.getServiceTime() < timeQuantum ? job.getServiceTime() : timeQuantum);
 
-            updateResponseTime(time, job.getProcessName());
+
 
             this.getTimeline().add(new Event(job.getProcessName(), time, time + bt));
             time += bt;
@@ -34,6 +34,10 @@ public class RoundRobin extends JobScheduler {
                     }
                 }
             }
+        }
+        for(Job job: getJobs()) {
+            Event lastEvent = getTimeline().stream().filter(event -> event.getProcessName().equals(job.getProcessName())).reduce((first, second) -> second).orElse(null);
+            updateResponseTime(lastEvent.getFinishTime(),job.getProcessName());
         }
 
         adjustWTAndTAT();
