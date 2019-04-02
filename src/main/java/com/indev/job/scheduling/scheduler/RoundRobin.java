@@ -15,8 +15,6 @@ public class RoundRobin extends JobScheduler {
             Job job = jobs.get(0);
             int bt = (job.getServiceTime() < timeQuantum ? job.getServiceTime() : timeQuantum);
 
-
-
             this.getTimeline().add(new Event(job.getProcessName(), time, time + bt));
             time += bt;
             jobs.remove(0);
