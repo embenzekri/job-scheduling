@@ -20,7 +20,7 @@ public class FirstComeFirstServed extends JobScheduler {
         for (Job job : this.getJobs()) {
             job.setWaitingTime(this.getEvent(job).getStartTime() - job.getArrivalTime());
             job.setTurnaroundTime(job.getWaitingTime() + job.getServiceTime());
-            job.setResponseTime(this.getEvent(job).getStartTime() - job.getArrivalTime());
+            job.setResponseTime(this.getEvent(job).getStartTime());
         }
     }
 }
