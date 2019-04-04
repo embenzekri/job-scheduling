@@ -34,23 +34,24 @@ public class SchedulerResultPrinter {
     }
 
     private void printWithPriority(JobScheduler scheduler, boolean printPriority) {
-        System.out.print("Process\tAT\tST");
+        System.out.print(String.format("%-30s%-10s%-10s", "Process", "AT", "ST"));
         if (printPriority) {
-            System.out.print("\tPRT");
+            System.out.print(String.format("%-10s", "PRT"));
         }
-        System.out.print("\tWT\tRT\tTAT\n");
+        System.out.print(String.format("%-10s%-10s%-10s\n", "WT", "RT", "TAT"));
 
         for (Job job : scheduler.getJobs()) {
-            System.out.print(job.getProcessName() + "\t\t" + job.getArrivalTime() + "\t" + job.getServiceTime());
+            System.out.print(String.format("%-30s%-10s%-10s", job.getProcessName(), job.getArrivalTime(), job.getServiceTime()));
             if (printPriority) {
-                System.out.print("\t" + job.getPriorityLevel());
+
+                System.out.print(String.format("%-10s", job.getPriorityLevel()));
             }
-            System.out.print("\t" + job.getWaitingTime() + "\t" + job.getResponseTime() + "\t" + job.getTurnaroundTime() + "\n");
+            System.out.print(String.format("%-10s%-10s%-10s\n", job.getWaitingTime(), job.getResponseTime(), job.getTurnaroundTime()));
         }
     }
 
     public void printSimulationResult(Map<String, RunResult> simulationResults, int simulationCount) {
-        System.out.println(String.format("\n%-30s%-10s%-10s%-10s\n","Algorithm","WT","RT","TAT"));
+        System.out.println(String.format("\n%-30s%-10s%-10s%-10s\n", "Algorithm", "WT", "RT", "TAT"));
 
         double minWT = Double.MAX_VALUE;
         double minTAT = Double.MAX_VALUE;
